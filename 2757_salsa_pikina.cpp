@@ -66,10 +66,14 @@ int main() {
 
   // Fill in the next bottles of salsa
   if (mostFrequentIndex != N - 1) {
-    ll fillQuantity = quantityVector[mostFrequentIndex] - quantityVector[mostFrequentIndex + 1];
+    int index = mostFrequentIndex;
     while (K > 0) {
-      K -= fillQuantity;
-      maxCounter++;
+      if (index == mostFrequentIndex) {
+        ll fillQuantity = quantityVector[index] - quantityVector[index + 1];
+        K -= fillQuantity;
+        maxCounter++;
+        index++;
+      }
     }
   }
   else {

@@ -25,7 +25,7 @@ int main() {
   // Read the numbers
   cin >> N;
 
-  // Store each bottle quantity 
+  // Get the numbers
   for (int i = 0; i < N + 2; i++) {
     int number;
     cin >> number;
@@ -35,31 +35,36 @@ int main() {
   // Sort the Vector in descending order
   sort(numbersVector.begin(),numbersVector.end());
 
+  // Display the vector
+  // DisplayContainer(numbersVector);
+
   // Sweep the vector
-  bool continueSearch = true;
-  ll leftBoundary = 0;
-  while (continueSearch == true) {
-    if (leftBoundary < N) {
-      ll sum = numbersVector[leftBoundary];
-      for (ll rightBoundary = leftBoundary + 1; 
-              rightBoundary < N + 1; 
-              rightBoundary++) {
-        sum += numbersVector[rightBoundary];
-        if (sum == numbersVector[rightBoundary + 1] && rightBoundary == leftBoundary + N - 1) {
-          for (ll i = leftBoundary; i <= rightBoundary; i++) {
-            cout << numbersVector[i] << " ";
-          }
-          cout << endl;
-          continueSearch = false;
-          break;
-        }
+  suma = 0;
+  ll left, right;
+  bool success = false;
+  
+  for (ll i = 0; i < N; i++) {
+    suma = numbersVector[i];
+    for (ll j = i + 1; j < N + 1; j++) {
+      ll span = j - i + 1;
+      suma += numbersVector[j];
+      if (suma == numbersVector[j+1] && span == N) {
+        success = true;
+        left = i;
+        right = j;
+        break;
       }
-      leftBoundary++;
     }
-    else {
-      continueSearch = false;
-      cout << "-1" << endl;
+    if (success == true) {
+      for (ll i = left; i <= right; i++) {
+            cout << numbersVector[i] << " ";
+      }
+      cout << endl;
+      break;
     }
+  }
+  if (success == false) {
+    cout << "-1" << endl;
   }
   return 0;
 }

@@ -1,4 +1,5 @@
 // 1407_Misterioso_Asesino_Celda5
+// https://omegaup.com/arena/problem/asesino/#problems
 // Wilmer Gaona Romero
 // 20.05.2021
 
@@ -6,16 +7,16 @@
 
 using namespace std;
 
-int cells[101][101], roomWidth = 0, roomHeight = 0, numberCellsOccupied = 0;
+int cells[102][102], roomWidth = 0, roomHeight = 0, numberCellsOccupied = 0;
 int initialValue = 0, finalValue = 0, maxValues = 0, numberValidCells = 0;
 
-int SetInitialValue (int &x, int &y) {
+int SetInitialValue (int i, int j) {
   int value;
-  if((x == 1 && y == 1) || (x == 1 && x == roomWidth) ||
-    (x == 1 && y == roomHeight) || (x == roomWidth && y == roomHeight)) {
+  if((j == 1 && i == 1) || (j == roomWidth && i == 1) ||
+    (j == 1 && i == roomHeight) || (j == roomWidth && i == roomHeight)) {
       value = 1;
   }
-  else if(x == 1 || x == roomWidth || y == 1 || y == roomHeight) {
+  else if(j == 1 || j == roomWidth || i == 1 || i == roomHeight) {
     value = 2;
   }
   else {
@@ -24,36 +25,42 @@ int SetInitialValue (int &x, int &y) {
   return value;
 }
 
-int CheckNeighborhood (int &x, int&y) {
-  // cout << "(" << x << "," << y << ")" << endl;
-  for (int i = y - 1; i <= y + 1; i++) {
-    if (i > 0 && i <= roomHeight) {
-      for (int j = x - 1; j <= x + 1; j++) {
-        if (j > 0 && j <= roomWidth) {
-          if (cells[j][i] == 1 && j != x && i != y) {
-            initialValue--;
-            // cout << "\t" << "Minus 1 value by (" << j << ","<< i << ")" << endl; 
-          }
-        }
-      }
-    }
-  }
+
+int CheckNeighborhood (int i, int j) {
+  // cout << "(" << i << "," << j << ")" << endl;
+
+  // above row
+  if (cells[i - 1][j - 1] == 1) initialValue--;
+  if (cells[i - 1][j] == 1) initialValue -= 2;
+  if (cells[i - 1][j + 1] == 1) initialValue--;
+
+  // same row
+  if (cells[i][j - 1] == 1) initialValue -= 2;
+  if (cells[i][j + 1] == 1) initialValue -= 2;
+
+  // below row
+  if (cells[i + 1][j - 1] == 1) initialValue--;
+  if (cells[i + 1][j] == 1) initialValue -= 2;
+  if (cells[i + 1][j + 1] == 1) initialValue--;
+
+  if (initialValue < 0)
+    initialValue = 0;
   return initialValue;
 }
 
 void PrintMatrix(){
-  cout << endl;
-  for (int y = roomHeight; y > 0; y--) {
+  for (int y = 1; y <= roomHeight; y++) {
     for (int x = 1; x <= roomWidth; x++) {
-        cout << cells[x][y] << " "; 
+        cout << cells[y][x] << " "; 
     }
     cout << endl;
   }
+  cout << endl;
 }
 
 int main() {
-  // Read the width and height of the room
-  cin >> roomWidth >> roomHeight;
+  // Read the height and width of the room
+  cin >> roomHeight >> roomWidth;
 
   // Read the number of occupied cells
   cin >> numberCellsOccupied;
@@ -67,27 +74,25 @@ int main() {
         cells[i][j] = 0;
     }
   }
+  
   // Enter the matrix of cells with the positions of occupied cells
   int x = 0;
   int y = 0;
   for (int i = 0; i < numberCellsOccupied; i++) {
-    cin >> x >> y;
-    cells[x][y] = 1;
-    initialValue = SetInitialValue(x,y);
+    cin >> y >> x;
+    cells[y][x] = 1;
+    initialValue = SetInitialValue(y,x);
     // cout << "initialValue: " << initialValue << endl;
-    finalValue = CheckNeighborhood(x,y);
+    finalValue = CheckNeighborhood(y,x);
     // cout << "finalValue: " << finalValue << endl;
     // PrintMatrix();
     numberValidCells -= finalValue;
   }
 
-  
-  // Show the matrix
-  // PrintMatrix();
-
-  // Show the number of valid cells
-  // cout << "number of valid cells: " << numberValidCells << endl;
-  cout << numberValidCells << endl;
+  if (roomHeight < 2 || roomWidth < 2)
+    cout << 0;
+  else
+    cout << numberValidCells << endl;
 
   return 0;
 }

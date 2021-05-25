@@ -43,6 +43,7 @@ int CheckNeighborhood (int i, int j) {
   if (cells[i + 1][j] == 1) initialValue -= 2;
   if (cells[i + 1][j + 1] == 1) initialValue--;
 
+  // Check for an invalid result
   if (initialValue < 0)
     initialValue = 0;
   return initialValue;
@@ -76,16 +77,16 @@ int main() {
   }
   
   // Enter the matrix of cells with the positions of occupied cells
-  int x = 0;
-  int y = 0;
-  for (int i = 0; i < numberCellsOccupied; i++) {
+  while(numberCellsOccupied--) {
+    int x;
+    int y;
     cin >> y >> x;
+
     cells[y][x] = 1;
+
     initialValue = SetInitialValue(y,x);
-    // cout << "initialValue: " << initialValue << endl;
     finalValue = CheckNeighborhood(y,x);
-    // cout << "finalValue: " << finalValue << endl;
-    // PrintMatrix();
+
     numberValidCells -= finalValue;
   }
 

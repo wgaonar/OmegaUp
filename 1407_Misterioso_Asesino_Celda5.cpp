@@ -7,47 +7,8 @@
 
 using namespace std;
 
-int cells[102][102], roomWidth = 0, roomHeight = 0, numberCellsOccupied = 0;
-int initialValue = 0, finalValue = 0, maxValues = 0, numberValidCells = 0;
-
-int SetInitialValue (int i, int j) {
-  int value;
-  if((j == 1 && i == 1) || (j == roomWidth && i == 1) ||
-    (j == 1 && i == roomHeight) || (j == roomWidth && i == roomHeight)) {
-      value = 1;
-  }
-  else if(j == 1 || j == roomWidth || i == 1 || i == roomHeight) {
-    value = 2;
-  }
-  else {
-    value = 4; 
-  }
-  return value;
-}
-
-
-int CheckNeighborhood (int i, int j) {
-  // cout << "(" << i << "," << j << ")" << endl;
-
-  // above row
-  if (cells[i - 1][j - 1] == 1) initialValue--;
-  if (cells[i - 1][j] == 1) initialValue -= 2;
-  if (cells[i - 1][j + 1] == 1) initialValue--;
-
-  // same row
-  if (cells[i][j - 1] == 1) initialValue -= 2;
-  if (cells[i][j + 1] == 1) initialValue -= 2;
-
-  // below row
-  if (cells[i + 1][j - 1] == 1) initialValue--;
-  if (cells[i + 1][j] == 1) initialValue -= 2;
-  if (cells[i + 1][j + 1] == 1) initialValue--;
-
-  // Check for an invalid result
-  if (initialValue < 0)
-    initialValue = 0;
-  return initialValue;
-}
+int cells[102][102], roomWidth = 0, roomHeight = 0;
+int numberCellsOccupied = 0, numberValidCells = 0;
 
 void PrintMatrix(){
   for (int y = 1; y <= roomHeight; y++) {
@@ -59,6 +20,20 @@ void PrintMatrix(){
   cout << endl;
 }
 
+int CheckNeighborhood (int i, int j) {
+  // cout << "(" << i << "," << j << ")" << endl;
+  
+  if (cells[i][j] != 1) {
+    if (cells[i][j + 1] != 1) {
+      if (cells[i + 1][j] != 1) {
+        if (cells[i + 1][j + 1] != 1)
+          return 1;
+      }
+    }
+  }
+  return 0;
+}
+
 int main() {
   // Read the height and width of the room
   cin >> roomHeight >> roomWidth;
@@ -67,7 +42,7 @@ int main() {
   cin >> numberCellsOccupied;
 
   // Calculates the initial and maximum possibilities
-  numberValidCells = (roomWidth - 1) * (roomHeight - 1);
+  numberValidCells = 0;
 
   // Fill the matrix of cells with 0s
   for (int i = 1; i <= roomHeight; i++) {
@@ -83,17 +58,22 @@ int main() {
     cin >> y >> x;
 
     cells[y][x] = 1;
-
-    initialValue = SetInitialValue(y,x);
-    finalValue = CheckNeighborhood(y,x);
-
-    numberValidCells -= finalValue;
   }
+  
+  // PrintMatrix();
 
   if (roomHeight < 2 || roomWidth < 2)
-    cout << 0;
-  else
+    cout << 0 << endl;
+  else {
+    for (int i = 1; i < roomHeight; i++) {
+      for (int j = 1; j < roomWidth; j++) {
+        int value = CheckNeighborhood(i, j);
+        numberValidCells +=  value;
+        // cout << numberValidCells << endl;
+      }
+    }
     cout << numberValidCells << endl;
+  }
 
   return 0;
 }

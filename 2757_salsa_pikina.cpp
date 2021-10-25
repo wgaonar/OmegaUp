@@ -1,4 +1,5 @@
 // Wilmer Gaona Romero
+// https://omegaup.com/arena/problem/OMI2015LENGUAJE2/
 // 18.05.2021
 
 #include <iostream>
@@ -6,7 +7,7 @@
 #include <vector>
 
 using namespace std;
-
+a
 typedef long long int ll;
 ll  N = 0, K = 0, maxCounter = 1, counter = 1, 
     mostFrequentIndex  = 0, firstPosition = 0;
